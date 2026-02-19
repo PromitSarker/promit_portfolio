@@ -144,14 +144,14 @@
             <span class="font-serif text-sm tracking-widest uppercase">{{ profile.name|default:"Promit Sarker" }}</span>
           </div>
         </div>
-        <nav class="hidden lg:flex space-x-12">
-          <a href="#philosophy" class="nav-link">{{ profile.philosophy_title|default:"The Philosophy" }}</a>
-          <a href="#armory" class="nav-link">{{ profile.armory_title|default:"The Armory" }}</a>
-          <a href="#laboratories" class="nav-link">{{ profile.projects_title|default:"The Laboratories" }}</a>
-          <a href="#library" class="nav-link">{{ profile.publications_title|default:"The Library" }}</a>
-          <a href="#academy" class="nav-link">{{ profile.chronology_title|default:"The Academy" }}</a>
-          <a href="#chronicles" class="nav-link">{{ profile.chronicles_title|default:"The Chronicles" }}</a>
-          <a href="#correspondence" class="nav-link">Correspondence</a>
+        <nav class="hidden md:flex items-center space-x-4 lg:space-x-8">
+          <a href="#philosophy" class="nav-link text-[0.6rem] lg:text-[0.7rem]"><span class="text-gold mr-1">I.</span> {{ profile.philosophy_title|default:"Philosophy" }}</a>
+          <a href="#armory" class="nav-link text-[0.6rem] lg:text-[0.7rem]"><span class="text-gold mr-1">II.</span> {{ profile.armory_title|default:"Armory" }}</a>
+          <a href="#laboratories" class="nav-link text-[0.6rem] lg:text-[0.7rem]"><span class="text-gold mr-1">III.</span> {{ profile.projects_title|default:"Laboratories" }}</a>
+          <a href="#library" class="nav-link text-[0.6rem] lg:text-[0.7rem]"><span class="text-gold mr-1">IV.</span> {{ profile.publications_title|default:"Library" }}</a>
+          <a href="#academy" class="nav-link text-[0.6rem] lg:text-[0.7rem]"><span class="text-gold mr-1">V.</span> {{ profile.chronology_title|default:"Academy" }}</a>
+          <a href="#chronicles" class="nav-link text-[0.6rem] lg:text-[0.7rem]"><span class="text-gold mr-1">VI.</span> Chronicles</a>
+          <a href="#correspondence" class="nav-link text-[0.6rem] lg:text-[0.7rem]"><span class="text-gold mr-1">VII.</span> Correspondence</a>
         </nav>
         <a href="{{ profile.resume_url|default:'#' }}" target="_blank" class="bg-foreground text-background px-6 py-2 font-serif text-xs uppercase tracking-widest hover:bg-gold transition-colors duration-300">Resumé</a>
       </div>
