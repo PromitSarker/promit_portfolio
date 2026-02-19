@@ -21,11 +21,26 @@ class ContactView(APIView):
             return Response({'status': 'success'})
         return Response(serializer.errors, status=400)
 
+from .models import Project, BlogPost, ContactMessage, Experience, Education, Publication, PortfolioProfile, PhilosophyTrait, SkillCategory
+
 def home(request):
     projects = Project.objects.all()
     blog_posts = BlogPost.objects.all()
+    experiences = Experience.objects.all()
+    educations = Education.objects.all()
+    publications = Publication.objects.all()
+    profile = PortfolioProfile.objects.first()
+    traits = PhilosophyTrait.objects.all()
+    skill_categories = SkillCategory.objects.prefetch_related('skills').all()
+    
     return render(request, 'index.html', {
         'projects': projects,
-        'blog_posts': blog_posts
+        'blog_posts': blog_posts,
+        'experiences': experiences,
+        'educations': educations,
+        'publications': publications,
+        'profile': profile,
+        'traits': traits,
+        'skill_categories': skill_categories
     })
 

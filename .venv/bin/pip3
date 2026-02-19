@@ -1,4 +1,4 @@
-#!/home/workstation/Desktop/Portfolio/.venv/bin/python
+#!/home/aether/Desktop/Laboratory/promit_portfolio/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
