@@ -12,6 +12,7 @@ class PortfolioProfile(models.Model):
     
     projects_title = models.CharField(max_length=200, default="Selected Works")
     armory_title = models.CharField(max_length=200, default="The Armory")
+    armory_tagline = models.CharField(max_length=500, default="An architectural repository of technical proficiencies tailored for intelligent systems.")
     publications_title = models.CharField(max_length=200, default="Publications")
     chronology_title = models.CharField(max_length=200, default="Chronology")
     chronicles_title = models.CharField(max_length=200, default="The Chronicles")
@@ -31,6 +32,17 @@ class PortfolioProfile(models.Model):
     def __str__(self):
         return f"{self.name}'s Profile"
 
+class SkillPillar(models.Model):
+    name = models.CharField(max_length=100, help_text="e.g. FOUNDATIONS")
+    subtitle = models.CharField(max_length=100, help_text="e.g. CORE ENGINEERING")
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.name
+
 class PhilosophyTrait(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
@@ -49,7 +61,8 @@ class Project(models.Model):
     description = models.TextField()
     # Store tags as a plain text string (comma-separated)
     tags = models.TextField(help_text="Comma-separated tags, e.g. Python,Django,ML")
-    imageUrl = models.URLField()
+    image = models.ImageField(upload_to='projects/', blank=True, null=True)
+    imageUrl = models.URLField(blank=True, null=True, help_text="Fallback URL if no image is uploaded")
     url = models.URLField(help_text="Link to project, e.g., GitHub or live demo")  # new field
 
     def get_tags(self):
@@ -121,6 +134,7 @@ class Education(models.Model):
 
 
 class SkillCategory(models.Model):
+    pillar = models.ForeignKey(SkillPillar, related_name='categories', on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100)
     order = models.IntegerField(default=0)
 
@@ -129,7 +143,7 @@ class SkillCategory(models.Model):
         verbose_name_plural = "Skill Categories"
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.pillar.name if self.pillar else 'No Pillar'})"
 
 class Skill(models.Model):
     name = models.CharField(max_length=100)

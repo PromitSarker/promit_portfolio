@@ -21,7 +21,7 @@ class ContactView(APIView):
             return Response({'status': 'success'})
         return Response(serializer.errors, status=400)
 
-from .models import Project, BlogPost, ContactMessage, Experience, Education, Publication, PortfolioProfile, PhilosophyTrait, SkillCategory
+from .models import Project, BlogPost, ContactMessage, Experience, Education, Publication, PortfolioProfile, PhilosophyTrait, SkillCategory, SkillPillar
 
 def home(request):
     projects = Project.objects.all()
@@ -31,7 +31,7 @@ def home(request):
     publications = Publication.objects.all()
     profile = PortfolioProfile.objects.first()
     traits = PhilosophyTrait.objects.all()
-    skill_categories = SkillCategory.objects.prefetch_related('skills').all()
+    skill_pillars = SkillPillar.objects.prefetch_related('categories__skills').all()
     
     return render(request, 'index.html', {
         'projects': projects,
@@ -41,6 +41,6 @@ def home(request):
         'publications': publications,
         'profile': profile,
         'traits': traits,
-        'skill_categories': skill_categories
+        'skill_pillars': skill_pillars
     })
 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>St. Aurelius | The Intersection of Wisdom & Code</title>
+    <title>Promit Sarker | Scribe of the Silicon Scroll</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -102,28 +102,71 @@
         font-family: 'Cinzel', serif;
       }
       .skill-box {
-        border: 1px solid #eab308;
-        padding: 0.5rem 1.5rem;
+        padding: 0.6rem 1.2rem;
         position: relative;
         display: inline-block;
         font-family: 'Inter', sans-serif;
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
+        font-size: 0.65rem;
+        letter-spacing: 0.15em;
         text-transform: uppercase;
-        font-weight: 500;
-        margin: 0.5rem;
+        font-weight: 600;
+        margin: 0.4rem;
         min-width: 100px;
         text-align: center;
+        background-color: transparent;
+        color: #78716c;
+        border: 1px solid #e7e5e4;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: default;
+        min-width: 90px;
+        background: #fff;
       }
-      .skill-box::after {
+      .skill-box:hover {
+        border-color: #eab308;
+        color: #1c1917;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -10px rgba(234, 179, 8, 0.2);
+      }
+      .pillar-column {
+        position: relative;
+        padding-bottom: 2rem;
+      }
+      .pillar-column:not(:last-child)::after {
         content: '';
         position: absolute;
-        top: 2px;
-        left: 2px;
-        right: 2px;
-        bottom: 2px;
-        border: 1px solid #eab308;
-        opacity: 0.4;
+        right: 0;
+        top: 20%;
+        bottom: 10%;
+        width: 1px;
+        background-color: #f5f5f4;
+        display: none;
+      }
+      @media (min-width: 1024px) {
+        .pillar-column:not(:last-child)::after {
+          display: block;
+        }
+      }
+      .category-header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2rem;
+        margin-top: 3rem;
+      }
+      .category-header::before, .category-header::after {
+        content: '';
+        height: 1px;
+        background-color: #e7e5e4;
+        flex: 1;
+      }
+      .category-header span {
+        padding: 0 1.5rem;
+        font-family: 'Cinzel', serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        color: #a8a29e;
+        text-transform: uppercase;
       }
       .footer-bg {
         background-color: #0c0a09;
@@ -235,17 +278,32 @@
 
         <div class="container mx-auto text-center relative z-10">
           <span class="section-label">II. {{ profile.armory_title|default:"The Armory" }}</span>
-          <h2 class="text-5xl font-serif mb-24 uppercase tracking-widest">{{ profile.armory_title|default:"The Armory" }}</h2>
+          <h2 class="text-5xl font-serif mb-6 uppercase tracking-widest">{{ profile.armory_title|default:"The Armory" }}</h2>
+          <p class="text-stone-400 font-serif text-[0.65rem] italic tracking-widest mb-24 max-w-2xl mx-auto uppercase">
+            {{ profile.armory_tagline|default:"An architectural repository of technical proficiencies tailored for intelligent systems." }}
+          </p>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
-            {% for category in skill_categories %}
-            <div class="flex flex-col items-center">
-              <h3 class="font-serif text-xs uppercase tracking-[0.3em] mb-10 text-stone-400 border-b border-stone-100 pb-2 w-full">{{ category.name }}</h3>
-              <div class="flex flex-wrap justify-center gap-4">
-                {% for skill in category.skills.all %}
-                <div class="skill-box">{{ skill.name }}</div>
-                {% endfor %}
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-0">
+            {% for pillar in skill_pillars %}
+            <div class="pillar-column px-12">
+              <div class="mb-16">
+                <h3 class="font-serif text-lg tracking-widest uppercase mb-2 text-stone-900">{{ pillar.name }}</h3>
+                <p class="text-[0.55rem] tracking-[0.3em] text-stone-400 uppercase mb-6">{{ pillar.subtitle }}</p>
+                <div class="w-10 h-1 bg-gold mx-auto"></div>
               </div>
+
+              {% for category in pillar.categories.all %}
+              <div class="mb-12">
+                <div class="category-header">
+                  <span>{{ category.name }}</span>
+                </div>
+                <div class="flex flex-wrap justify-center gap-2">
+                  {% for skill in category.skills.all %}
+                  <div class="skill-box">{{ skill.name }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endfor %}
             </div>
             {% endfor %}
           </div>
@@ -263,7 +321,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-12 lg:gap-24 overflow-hidden">
             <div class="{% if forloop.counter|divisibleby:2 %}lg:order-2{% endif %} relative">
               <div class="aspect-[4/3] bg-stone-200 overflow-hidden group">
-                <img src="{{ project.imageUrl }}" alt="{{ project.title }}" class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105">
+                <img src="{% if project.image %}{{ project.image.url }}{% else %}{{ project.imageUrl }}{% endif %}" alt="{{ project.title }}" class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105">
               </div>
               <span class="project-number absolute top-0 -translate-y-1/2 {% if forloop.counter|divisibleby:2 %}right-0 translate-x-1/2{% else %}left-0 -translate-x-1/2{% endif %} hidden lg:block">
                 {{ forloop.counter|stringformat:"02d" }}
@@ -344,7 +402,7 @@
           <div class="space-y-24 md:space-y-32">
             <!-- Experience (Praxis) Section -->
             <div class="text-center md:text-left mb-16 md:mb-0 relative z-20">
-              <h3 class="font-serif text-sm uppercase tracking-[0.3em] text-stone-300 mb-20 text-center">{{ profile.experience_label|default:"I. Praxis (Experience)" }}</h3>
+              <h3 class="font-serif text-sm uppercase tracking-[0.3em] text-stone-300 mb-20 text-center"><span class="bg-background px-4 relative z-10">{{ profile.experience_label|default:"I. Praxis (Experience)" }}</span></h3>
             </div>
 
             {% for exp in experiences %}
@@ -366,10 +424,9 @@
               </div>
             </div>
             {% endfor %}
-
             <!-- Education (Formation) Section -->
             <div class="text-center md:text-left pt-20 relative z-20">
-              <h3 class="font-serif text-sm uppercase tracking-[0.3em] text-stone-300 mb-20 text-center">{{ profile.education_label|default:"II. Formation (Education)" }}</h3>
+              <h3 class="font-serif text-sm uppercase tracking-[0.3em] text-stone-300 mb-20 text-center"><span class="bg-background px-4 relative z-10">{{ profile.education_label|default:"<br> II. Formation (Education)" }}</span></h3>
             </div>
 
             {% for edu in educations %}
@@ -494,7 +551,7 @@
 
     <footer class="bg-stone-950 py-12 px-6 border-t border-stone-900">
       <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-stone-600 text-[0.6rem] uppercase tracking-[0.2em] font-serif">
-        <p>&copy; MMXXIV / {{ profile.name|default:"M. Aurelius" }}</p>
+        <p>&copy; MMXXIV / {{ profile.name|default:"P. Sarker" }}</p>
         <div class="mt-4 md:mt-0 flex space-x-8">
           <a href="#" class="hover:text-gold transition-colors">Privacy</a>
           <a href="#" class="hover:text-gold transition-colors">Terms</a>
