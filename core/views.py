@@ -26,8 +26,8 @@ from .models import Project, BlogPost, ContactMessage, Experience, Education, Pu
 def home(request):
     projects = Project.objects.all()
     blog_posts = BlogPost.objects.all()
-    experiences = Experience.objects.all()
-    educations = Education.objects.all()
+    experiences = Experience.objects.all().order_by('-start_year', '-order')
+    educations = Education.objects.all().order_by('-start_year', '-order')
     publications = Publication.objects.all()
     profile = PortfolioProfile.objects.first()
     traits = PhilosophyTrait.objects.all()

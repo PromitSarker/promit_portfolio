@@ -110,10 +110,11 @@ class Experience(models.Model):
     location = models.CharField(max_length=200, blank=True, null=True)
     period = models.CharField(max_length=100, help_text="e.g., 2023 - Present")
     description = models.TextField()
+    start_year = models.IntegerField(default=2000, help_text="Starting year for sorting")
     order = models.IntegerField(default=0, help_text="Higher number comes first")
 
     class Meta:
-        ordering = ['-order']
+        ordering = ['-start_year', '-order']
 
     def __str__(self):
         return f"{self.title} at {self.company}"
@@ -124,10 +125,11 @@ class Education(models.Model):
     institution = models.CharField(max_length=200)
     period = models.CharField(max_length=100, help_text="e.g., 2016 – 2018")
     description = models.TextField()
+    start_year = models.IntegerField(default=2000, help_text="Starting year for sorting")
     order = models.IntegerField(default=0, help_text="Higher number comes first")
 
     class Meta:
-        ordering = ['-order']
+        ordering = ['-start_year', '-order']
 
     def __str__(self):
         return f"{self.degree} at {self.institution}"

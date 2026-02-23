@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -171,6 +173,18 @@
       .footer-bg {
         background-color: #0c0a09;
       }
+      
+      /* Animated Timeline */
+      .timeline-draw {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 2px;
+        height: 0;
+        background-color: #eab308;
+        transform: translateX(-50%);
+        z-index: 5;
+      }
     </style>
   </head>
   <body class="antialiased overflow-x-hidden">
@@ -269,11 +283,11 @@
       <!-- Armory Section -->
       <section id="armory" class="py-32 px-6 bg-white relative overflow-hidden">
         <!-- Background Decorations (Simulated via icons/CSS for now as per blueprint style) -->
-        <div class="absolute left-0 top-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none hidden lg:block">
-            <i class="fa-solid fa-bow-arrow text-[20rem]"></i>
+        <div class="absolute left-4 top-0 bottom-0 flex items-center opacity-[0.02] pointer-events-none hidden lg:block parallax-artifact" data-speed="0.02">
+            <i class="fa-solid fa-bow-arrow text-[25rem] leading-none"></i>
         </div>
-        <div class="absolute right-0 top-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none hidden lg:block">
-            <i class="fa-solid fa-shield-halved text-[20rem]"></i>
+        <div class="absolute right-4 top-0 bottom-0 flex items-center opacity-[0.02] pointer-events-none hidden lg:block parallax-artifact" data-speed="-0.02">
+            <i class="fa-solid fa-shield-halved text-[25rem] leading-none"></i>
         </div>
 
         <div class="container mx-auto text-center relative z-10">
@@ -333,7 +347,7 @@
                     <span class="text-[0.6rem] uppercase tracking-widest text-muted border border-stone-200 px-2 py-0.5">{{ tag }}</span>
                     {% endfor %}
                 </div>
-                <h3 class="text-3xl font-serif mb-6 uppercase">Project: {{ project.title }}</h3>
+                <h3 class="text-3xl font-serif mb-6 uppercase transition-all duration-300 hover:text-gold hover:drop-shadow-[0_0_10px_rgba(234,179,8,0.3)] cursor-default">Project: {{ project.title }}</h3>
                 <p class="text-muted mb-8 leading-relaxed max-w-xl {% if forloop.counter|divisibleby:2 %}ml-auto{% endif %}">
                   {{ project.description }}
                 </p>
@@ -398,6 +412,7 @@
         <div class="container mx-auto max-w-4xl relative">
           <!-- Timeline Line -->
           <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-stone-200 -translate-x-1/2"></div>
+          <div class="hidden md:block timeline-draw" id="timeline-line"></div>
           
           <div class="space-y-24 md:space-y-32">
             <!-- Experience (Praxis) Section -->
@@ -416,7 +431,7 @@
               </div>
               
               <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center">
-                <div class="chronology-dot"></div>
+                <div class="chronology-dot timeline-node"></div>
               </div>
               
               <div class="md:w-1/2 {% if forloop.counter|divisibleby:2 %}md:order-1 md:text-right md:pr-16{% else %}md:pl-16{% endif %}">
@@ -440,7 +455,7 @@
               </div>
               
               <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center">
-                <div class="chronology-dot"></div>
+                <div class="chronology-dot timeline-node"></div>
               </div>
               
               <div class="md:w-1/2 {% if forloop.counter|divisibleby:2 %}md:order-1 md:text-right md:pr-16{% else %}md:pl-16{% endif %}">
@@ -641,6 +656,55 @@
       document.querySelectorAll('section').forEach((section) => {
         section.classList.add('opacity-0', 'translate-y-10');
         observer.observe(section);
+      });
+
+      // GSAP Animations
+      gsap.registerPlugin(ScrollTrigger);
+
+      // 1. Academy Chronology Animation
+      const academySection = document.getElementById('academy');
+      const timelineLine = document.getElementById('timeline-line');
+      const timelineNodes = document.querySelectorAll('.timeline-node');
+
+      if (academySection && timelineLine) {
+        gsap.to(timelineLine, {
+          height: "100%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: academySection,
+            start: "top center",
+            end: "bottom center",
+            scrub: true,
+          }
+        });
+
+        timelineNodes.forEach(node => {
+          gsap.from(node, {
+            scale: 0,
+            backgroundColor: "#eab308",
+            boxShadow: "0 0 15px rgba(234, 179, 8, 0.8)",
+            scrollTrigger: {
+              trigger: node,
+              start: "top center+=100",
+              toggleActions: "play none none reverse"
+            }
+          });
+        });
+      }
+
+      // 3. Parallax Artifacts
+      document.querySelectorAll('.parallax-artifact').forEach(artifact => {
+        const speed = parseFloat(artifact.getAttribute('data-speed'));
+        gsap.to(artifact, {
+          yPercent: speed * 100,
+          ease: "none",
+          scrollTrigger: {
+            trigger: '#armory',
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+          }
+        });
       });
     </script>
   </body>
